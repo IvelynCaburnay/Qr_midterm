@@ -8,20 +8,29 @@ type Props = {
   icon: keyof typeof Ionicons.glyphMap;
   theme?: 'primary';
   onPress: () => void;
+  disabled?: boolean;
 };
 
-export default function AppButton({ title, icon, theme, onPress }: Props) {
+export default function AppButton({
+  title,
+  icon,
+  theme,
+  onPress,
+  disabled = false,
+}: Props) {
   if (theme === 'primary') {
     return (
       <View
         style={[
           styles.buttonOuter,
-          { borderWidth: 3, borderColor: COLORS.primary, borderRadius: 18 },
+          styles.primaryOuter,
+          disabled && styles.disabled,
         ]}
       >
         <Pressable
-          style={[styles.buttonInner, { backgroundColor: COLORS.primary }]}
+          style={[styles.buttonInner, styles.primaryInner]}
           onPress={onPress}
+          disabled={disabled}
         >
           <Ionicons
             name={icon}
@@ -29,7 +38,8 @@ export default function AppButton({ title, icon, theme, onPress }: Props) {
             color={COLORS.textOnPrimary}
             style={styles.icon}
           />
-          <Text style={[styles.label, { color: COLORS.textOnPrimary }]}>
+
+          <Text style={[styles.label, styles.primaryLabel]}>
             {title}
           </Text>
         </Pressable>
@@ -38,14 +48,19 @@ export default function AppButton({ title, icon, theme, onPress }: Props) {
   }
 
   return (
-    <View style={styles.buttonOuter}>
-      <Pressable style={styles.buttonInner} onPress={onPress}>
+    <View style={[styles.buttonOuter, disabled && styles.disabled]}>
+      <Pressable
+        style={styles.buttonInner}
+        onPress={onPress}
+        disabled={disabled}
+      >
         <Ionicons
           name={icon}
           size={22}
-          color={COLORS.textSecondary}
+          color={COLORS.textPrimary}
           style={styles.icon}
         />
+
         <Text style={styles.label}>{title}</Text>
       </Pressable>
     </View>
@@ -56,21 +71,46 @@ const styles = StyleSheet.create({
   buttonOuter: {
     width: '100%',
     marginBottom: 14,
+    borderWidth: 1,
+    borderColor: COLORS.hairline,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
+
+  primaryOuter: {
+    borderColor: COLORS.green,
+  },
+
   buttonInner: {
-    borderRadius: 14,
-    paddingVertical: 16,
+    minHeight: 52,
+    borderRadius: 10,
+    paddingVertical: 14,
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: COLORS.card,
-    shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  icon: { paddingRight: 10 },
-  label: { fontSize: 17, fontWeight: '600', color: COLORS.textPrimary },
+
+  primaryInner: {
+    backgroundColor: COLORS.green,
+  },
+
+  icon: {
+    marginRight: 10,
+  },
+
+  label: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+  },
+
+  primaryLabel: {
+    color: COLORS.textOnPrimary,
+  },
+
+  disabled: {
+    opacity: 0.5,
+  },
 });
